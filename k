@@ -49,6 +49,8 @@ for d in "$DEST"/.agents/skills/*/; do
 done
 echo "스킬 → $SK :${added:- (새로 넣은 것 없음)} · Codex 를 새로 띄우면 /skills 에 보임"
 
-# ======= 다음 할 일 — 옮기기 전에 과제 파일과 겹치는 이름부터 본다(읽기만 함) =======
-echo "다음: python3 $DEST/.agents/skills/init/overlap.py  ← 과제 파일과 겹치는 이름 목록"
+# ======= 다음 할 일 — 두 번째 줄 하나로 세 창 · codex 까지 =======
+echo "사전 체험: bash $DEST/scripts/tmux/start.sh --trial  ← 세 창 · codex 를 띄우고 MAIN 이 \$trial 로 남은 시험을 돌려 trial_test.md 로"
+echo "대회: bash $DEST/scripts/tmux/start.sh  ← 세 창 · codex(강도 · 자동 승인 · 이름) + 세션 확인"
+echo "그 밖: python3 $DEST/.agents/skills/init/overlap.py  ← 과제 파일과 겹치는 이름 목록"
 echo "환경 점검: bash $DEST/scripts/envcheck/envcheck.sh  ← 실패 번호 · 사유만 출력(--no-install 이면 설치 시간 재기 생략)"
