@@ -36,6 +36,19 @@ fi
 mv "$TMP/x" "$DEST"
 echo "설치 위치: $PWD/$DEST · 파일 $(find "$DEST" -type f | wc -l)개"
 
+# ======= 스킬을 Codex 가 읽는 곳(~/.codex/skills)에 복사 — kit/ 안에 두면 /skills 에 안 보인다(10/29 체험 실측) =======
+# 같은 이름이 이미 있으면 건너뛴다(손댄 스킬을 덮어쓰지 않기 위해) · 과제 폴더는 건드리지 않는다
+SK="${CODEX_HOME:-$HOME/.codex}/skills"
+mkdir -p "$SK"
+added=""
+for d in "$DEST"/.agents/skills/*/; do
+    n="$(basename "$d")"
+    if [ ! -e "$SK/$n" ]; then
+        cp -r "$d" "$SK/$n" && added="$added $n"
+    fi
+done
+echo "스킬 → $SK :${added:- (새로 넣은 것 없음)} · Codex 를 새로 띄우면 /skills 에 보임"
+
 # ======= 다음 할 일 — 옮기기 전에 과제 파일과 겹치는 이름부터 본다(읽기만 함) =======
 echo "다음: python3 $DEST/.agents/skills/init/overlap.py  ← 과제 파일과 겹치는 이름 목록"
 echo "환경 점검: bash $DEST/scripts/envcheck/envcheck.sh  ← 실패 번호 · 사유만 출력(--no-install 이면 설치 시간 재기 생략)"
