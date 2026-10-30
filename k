@@ -36,21 +36,7 @@ fi
 mv "$TMP/x" "$DEST"
 echo "설치 위치: $PWD/$DEST · 파일 $(find "$DEST" -type f | wc -l)개"
 
-# ======= 스킬을 Codex 가 읽는 곳(~/.codex/skills)에 복사 — kit/ 안에 두면 /skills 에 안 보인다(10/29 체험 실측) =======
-# 같은 이름이 이미 있으면 건너뛴다(손댄 스킬을 덮어쓰지 않기 위해) · 과제 폴더는 건드리지 않는다
-SK="${CODEX_HOME:-$HOME/.codex}/skills"
-mkdir -p "$SK"
-added=""
-for d in "$DEST"/.agents/skills/*/; do
-    n="$(basename "$d")"
-    if [ ! -e "$SK/$n" ]; then
-        cp -r "$d" "$SK/$n" && added="$added $n"
-    fi
-done
-echo "스킬 → $SK :${added:- (새로 넣은 것 없음)} · Codex 를 새로 띄우면 /skills 에 보임"
-
-# ======= 다음 할 일 — 두 번째 줄 하나로 세 창 · codex 까지 =======
-echo "다음: 새 터미널 탭에서 codex 를 띄우고 \$ready-start  ← 환경 세팅 · 확인 + MAIN 재시작 · INSP · 2ND 띄우기 명령"
-echo "그 밖: python3 $DEST/.agents/skills/ready-start/overlap.py  ← 과제 파일과 겹치는 이름 목록"
-echo "환경 점검: bash $DEST/scripts/envcheck/envcheck.sh  ← 실패 번호 · 사유만 출력(--no-install 이면 설치 시간 재기 생략)"
-echo "압축 훅: bash $DEST/scripts/hooks/install_hooks.sh  ← 압축 직전 스냅숏 · 직후 hand-on 안내(codex 새로 띄우고 /hooks 에서 신뢰)"
+# ======= 키트 = 작업 폴더 — Codex 를 키트에서 띄우면 키트 AGENTS · .agents/skills 가 실린다(0.163 실측) =======
+# 그래서 스킬을 ~/.codex/skills 로 복사하지 않는다(같은 이름이 두 곳에 있으면 «$이름» 이 옛 사본을 부를 수 있다)
+# --add-dir = 루트(과제 파일 · .git)에도 쓰기
+echo "다음: 새 터미널 탭에서  cd \"$PWD/$DEST\" && codex --add-dir \"$PWD\"  → \$ready-start  ← 환경 세팅 · git 등록 + MAIN 재시작 · INSP · 2ND 띄우기 명령"
