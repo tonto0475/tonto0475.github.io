@@ -38,5 +38,22 @@ echo "설치 위치: $PWD/$DEST · 파일 $(find "$DEST" -type f | wc -l)개"
 
 # ======= 키트 = 작업 폴더 — Codex 를 키트에서 띄우면 키트 AGENTS · .agents/skills 가 실린다(0.163 실측) =======
 # 그래서 스킬을 ~/.codex/skills 로 복사하지 않는다(같은 이름이 두 곳에 있으면 «$이름» 이 옛 사본을 부를 수 있다)
-# --add-dir = 루트(과제 파일 · .git)에도 쓰기
-echo "다음: 새 터미널 탭에서  cd \"$PWD/$DEST\" && codex --add-dir \"$PWD\"  → \$ready-start  ← 환경 세팅 · git 등록 + MAIN 재시작 · INSP · 2ND 띄우기 명령"
+# 유저는 예전처럼 codex 만 친다 — ~/.bashrc 의 codex 함수가 «-C 키트 --add-dir 루트» 를 붙인다(resume · fork 도 · 그 밖 하위 명령은 그대로)
+K="$PWD/$DEST"; R="$PWD"
+if ! grep -q "# >>> 키트 codex" "$HOME/.bashrc" 2>/dev/null; then
+    cat >> "$HOME/.bashrc" <<BLOCK
+# >>> 키트 codex — codex 를 치면 키트(작업 폴더)에서 띄우고 루트에도 쓰게(설치 한 줄이 넣음)
+codex() {
+  case "\${1:-}" in
+    resume|fork) local s="\$1"; shift; command codex "\$s" -C "$K" --add-dir "$R" "\$@" ;;
+    exec|e|review|login|logout|mcp|plugin|app-server|remote-control|completion|update|doctor|sandbox|debug|apply|a|queue|archive|delete|migrate-rollouts|unarchive|cloud|exec-server|features|help|agents) command codex "\$@" ;;
+    *) command codex -C "$K" --add-dir "$R" "\$@" ;;
+  esac
+}
+# <<< 키트 codex
+BLOCK
+    echo "codex 함수 등록 → ~/.bashrc (새 탭부터 · 키트에서 뜨고 루트에도 씀)"
+else
+    echo "codex 함수 이미 있음(~/.bashrc · 키트 경로가 바뀌었으면 그 블록을 지우고 다시 설치)"
+fi
+echo "다음: 새 터미널 탭에서 codex → \$ready-start  ← 환경 세팅 · git 등록 + MAIN 재시작 · INSP · 2ND 띄우기 명령"
